@@ -1,0 +1,5 @@
+# Make a copy of this and fill it in
+INFLUX_STORAGE=/var/lib/influxdb
+GRAFANA_STORAGE=/var/lib/grafana
+INFLUX_PORT=3000
+GRAFANA_PORT=8086

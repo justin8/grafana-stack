@@ -1,0 +1,23 @@
+#!/bin/bash
+set -x
+
+dir="$(dirname "$(readlink -f "$0")")"
+name="$(basename "$dir")"
+cd "$dir"
+image_list="$(cat docker-compose.yml|grep -E '^\s+image:' | awk '{print $2}')"
+
+if [[ $1 != '--fast' ]]; then
+	for image in $image_list; do
+		docker pull $image
+	done
+fi
+
+source "$dir/grafana.conf"
+
+# Generate initial influxdb config if it doesn't exist
+mkdir -p "$INFLUX_STORAGE" "$GRAFANA_STORAGE"
+INFLUX_IMAGE="$(grep -o "influxdb:[0-9].*" "$dir/docker-compose.yml")"
+INFLUX_CONFIG="$INFLUX_STORAGE/influxdb.conf"
+[[ ! -e $INFLUX_CONFIG ]] && docker run --rm $INFLUX_IMAGE influxd config > $INFLUX_CONFIG
+
+portinus ensure "$name" --source "$dir" --env "$dir/grafana.conf" --restart daily

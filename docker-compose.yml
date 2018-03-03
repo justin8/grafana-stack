@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  influxdb:
+    image: influxdb:1.4-alpine
+    volumes:
+      - "${INFLUX_STORAGE}/storage:/var/lib/influxdb:rw"
+      - "${INFLUX_STORAGE}/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
+    ports:
+      - "${INFLUX_PORT}:8086"
+
+  grafana:
+    image: grafana/grafana:4.6.3
+    volumes:
+      - "${GRAFANA_STORAGE}:/var/lib/grafana:rw"
+    ports:
+      - "${GRAFANA_PORT}:3000"
