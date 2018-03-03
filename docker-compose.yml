@@ -7,7 +7,8 @@ services:
       - "${INFLUX_STORAGE}/storage:/var/lib/influxdb:rw"
       - "${INFLUX_STORAGE}/influxdb.conf:/etc/influxdb/influxdb.conf:ro"
     ports:
-      - "${INFLUX_PORT}:8086"
+      - "8086:8086"
+      - "4242:4242"
 
   grafana:
     image: grafana/grafana:4.6.3
